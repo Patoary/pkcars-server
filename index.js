@@ -32,7 +32,23 @@ async function run (){
             const query = {_id:ObjectId(id)};
             const inventory = await carCollection.findOne(query);
             res.send(inventory); 
+        });
+
+        // update quantity
+        app.patch('/update/:id', async (req, res) =>{
+            const id = req.params.id;
+            const updateQuantity = req.body.updateQuantity;
+            const filteredProduct = {_id:ObjectId(id)};
+            const updateDoc = {
+                $set:{
+                    quantity: updateQuantity,
+                },
+            };
+            const updatedProduct = await carCollection.updateOne(filteredProduct, updateDoc);
+            res.send(updatedProduct);
+
         })
+
     }
     finally{
         
