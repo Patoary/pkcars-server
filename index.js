@@ -22,10 +22,25 @@ async function run (){
         // get all inventory
         app.get('/products', async(req,res) =>{
             const query = {};
+            const limit = parseInt(req.query.limit);
+            const pageNumber = parseInt(req.query.pageNumber);
             const cursor = carCollection.find(query);
-            const products = await cursor.toArray();
+            let products;
+            if(pageNumber || limit){
+                 products = await cursor.skip(limit*pageNumber).limit(limit) .toArray();
+            }
+            else{
+                products = await cursor.toArray();
+            }
             res.send(products);
         })
+
+        // find the total kind of product amount
+        app.get('/productCount', async(req, res) =>{
+            const count = await carCollection.estimatedDocumentCount();
+            res.send({count});
+        }) 
+        
         // get eachInventory
         app.get('/inventory/:id', async(req, res) =>{
             const id = req.params.id;
@@ -47,14 +62,16 @@ async function run (){
             const updatedProduct = await carCollection.updateOne(filteredProduct, updateDoc);
             res.send(updatedProduct);
 
-        })
+        });
+
 
         // addInventory
         app.post('/addInventory', async(req, res) =>{
             const newProduct = req.body;
             const result = await carCollection.insertOne(newProduct);
             res.send(result);
-        })
+        });
+
 
     }
     finally{
