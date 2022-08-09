@@ -107,18 +107,6 @@ async function run() {
             res.send(result);
         })
 
-        // const decodedEmail = req.decode.email;
-        //     const email = req.query.email;
-        //     if(email === decodedEmail){
-        //         const query = {email : email};
-        //         const cursor = carCollection.find(query);
-        //         const myItem = await cursor.toArray();
-        //         res.send(myItem);
-        //     }
-        //     else{
-        //         res.status(403).send({message: 'Forbidden Access'})
-
-        //     }
 
         // filter items according to user for myItem
         app.get('/myitem', verifyJWT, async (req, res) => {
